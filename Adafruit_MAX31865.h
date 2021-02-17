@@ -17,6 +17,8 @@
 #ifndef ADAFRUIT_MAX31865_H
 #define ADAFRUIT_MAX31865_H
 
+//#define MAX31865_DEBUG_LIBRARY
+
 #define MAX31865_CONFIG_REG 0x00
 #define MAX31865_CONFIG_BIAS 0x80
 #define MAX31865_CONFIG_MODEAUTO 0x40
@@ -84,6 +86,9 @@ public:
   uint16_t getLowerThreshold(void);
   uint16_t getUpperThreshold(void);
 
+  bool readRTDAsync(uint16_t& rtd); //added by JD
+  float temperatureAsync(float Rt, float RTDnominal, float refResistor); //added by JD
+
   void setWires(max31865_numwires_t wires);
   void autoConvert(bool b);
   void enable50Hz(bool b);
@@ -92,6 +97,10 @@ public:
   float temperature(float RTDnominal, float refResistor);
   float calculateTemperature(uint16_t RTDraw, float RTDnominal,
                              float refResistor);
+
+  #ifdef MAX31865_DEBUG_LIBRARY
+    uint8_t debugConfigRegister(void);
+  #endif
 
 private:
   Adafruit_SPIDevice spi_dev;
@@ -102,15 +111,15 @@ private:
   uint16_t readRegister16(uint8_t addr);
 
   void writeRegister8(uint8_t addr, uint8_t reg);
-  
+
   // bias voltage
   bool bias;
-  
+
   // continuous conversion
   bool continuous;
-  
+
   // 50Hz filter
-  bool filter50Hz;     
+  bool filter50Hz;
 };
 
 #endif
