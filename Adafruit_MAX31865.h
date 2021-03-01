@@ -1,5 +1,5 @@
 /**********Adafruit_MAX31865 modified by Sylvain Boyer 17/02/2021
- * 
+ *
  * 17/02/2021 - added some code from Jack Davies and J-M-L (arduino forum)
  *  https://forum.arduino.cc/index.php?topic=703346.msg4772457#msg4772457
  *    added: readRTDAsync() and temperatureAsync
@@ -99,7 +99,9 @@ public:
   uint16_t getUpperThreshold(void);
 
   bool readRTDAsync(uint16_t& rtd); //added by JD
+
   float temperatureAsync(float Rt, float RTDnominal, float refResistor); //added by JD
+
 
   void setWires(max31865_numwires_t wires);
   void autoConvert(bool b);
@@ -131,7 +133,12 @@ private:
   bool continuous;
 
   // 50Hz filter
+
   bool filter50Hz;
+
+  //timer for Asynchro Reading
+  uint32_t chrono;   //added Sylvain Boyer
+
 };
 
 #endif
