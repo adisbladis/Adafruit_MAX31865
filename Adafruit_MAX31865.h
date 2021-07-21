@@ -25,6 +25,7 @@
   Written by Limor Fried/Ladyada for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
  ****************************************************/
+//Branch asynchronouse_mode_fix
 
 #ifndef ADAFRUIT_MAX31865_H
 #define ADAFRUIT_MAX31865_H
