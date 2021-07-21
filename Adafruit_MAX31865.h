@@ -25,8 +25,6 @@
   Written by Limor Fried/Ladyada for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
  ****************************************************/
-//Branch asynchronouse_mode_fix
-
 #ifndef ADAFRUIT_MAX31865_H
 #define ADAFRUIT_MAX31865_H
 
@@ -82,6 +80,8 @@ typedef enum {
   MAX31865_FAULT_MANUAL_FINISH
 } max31865_fault_cycle_t;
 
+enum t_state : byte {STATE1, STATE2, STATE3}; //for asynchronous mode
+
 /*! Interface class for the MAX31865 RTD Sensor reader */
 class Adafruit_MAX31865 {
 public:
@@ -113,6 +113,8 @@ public:
   float calculateTemperature(uint16_t RTDraw, float RTDnominal,
                              float refResistor);
 
+  void changeState(t_state new_state);
+
   #ifdef MAX31865_DEBUG_LIBRARY
     uint8_t debugConfigRegister(void);
   #endif
@@ -139,6 +141,9 @@ private:
 
   //timer for Asynchro Reading
   uint32_t chrono;   //added Sylvain Boyer
+  // state for asynchronous mode
+  static t_state state; //Does static matter?
+
 
 };
 
