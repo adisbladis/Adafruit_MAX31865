@@ -113,7 +113,10 @@ public:
   float calculateTemperature(uint16_t RTDraw, float RTDnominal,
                              float refResistor);
 
-  void changeState(t_state new_state);
+  void setState(t_state new_state);
+
+  enum t_state : byte {STATE1, STATE2, STATE3}; // for asynchronous mode
+
 
   #ifdef MAX31865_DEBUG_LIBRARY
     uint8_t debugConfigRegister(void);
