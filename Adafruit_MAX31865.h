@@ -142,7 +142,7 @@ private:
   //timer for Asynchro Reading
   uint32_t chrono;   //added Sylvain Boyer
   // state for asynchronous mode
-  static t_state state; //Does static matter?
+  t_state state; //Does static matter?
 
 
 };
