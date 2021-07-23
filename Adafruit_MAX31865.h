@@ -115,9 +115,6 @@ public:
 
   void setState(t_state new_state);
 
-  enum t_state : byte {STATE1, STATE2, STATE3}; // for asynchronous mode
-
-
   #ifdef MAX31865_DEBUG_LIBRARY
     uint8_t debugConfigRegister(void);
   #endif
