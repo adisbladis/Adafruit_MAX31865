@@ -457,7 +457,7 @@ bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
         t |= MAX31865_CONFIG_1SHOT;
         writeRegister8(MAX31865_CONFIG_REG, t);
         chrono = millis();
-        setState(STATE3)
+        setState(STATE3);
       }
       break;
 
