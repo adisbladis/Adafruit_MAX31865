@@ -431,17 +431,13 @@ uint16_t Adafruit_MAX31865::readRTD(void) {
 
 bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
   //enum t_state : byte {STATE1, STATE2, STATE3};
-  //static t_state state = STATE1;
-  changeState(STATE1)
-  
+  //static t_state state = STATE1; 
   bool valueAvailable = false;
-  
   uint32_t timeoutVbias = 10;
   uint32_t timeoutf50Hz = 75;
   uint32_t timeoutf60Hz = 65;
 
-  switch (state) {
-
+  switch (this->state) {
     case STATE1:
       clearFault();
       //enableBias(true);
@@ -451,8 +447,7 @@ bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
         writeRegister8(MAX31865_CONFIG_REG, t);
       }
       chrono = millis();
-      //state = STATE2;
-      changeState(STATE2)
+      setState(STATE2);
       break;
 
     case STATE2:
@@ -461,8 +456,7 @@ bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
         t |= MAX31865_CONFIG_1SHOT;
         writeRegister8(MAX31865_CONFIG_REG, t);
         chrono = millis();
-        //state = STATE3;
-        changeState(STATE3)
+        setState(STATE3)
       }
       break;
 
@@ -471,8 +465,7 @@ bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
         if (millis() - chrono >= timeoutf50Hz) {
           rtd = readRegister16(MAX31865_RTDMSB_REG);
           rtd >>= 1;        // remove fault
-          //state = STATE1;   // get ready for next time
-          changeState(STATE1)
+          setState(STATE1); // get ready for next time
           valueAvailable = true; // signal computation is done
         }
       }
@@ -480,8 +473,7 @@ bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
         if (millis() - chrono >= timeoutf60Hz) {
           rtd = readRegister16(MAX31865_RTDMSB_REG);
           rtd >>= 1;        // remove fault
-          //state = STATE1;   // get ready for next time
-          changeState(STATE1)
+          setState(STATE1); // get ready for next time
           valueAvailable = true; // signal computation is done
         }
       }
@@ -490,7 +482,9 @@ bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
   return valueAvailable;
 }
 
-
+void Adafruit_MAX31865::setState(t_state new_state){
+  this->state = new_state;
+}
 
 
 
