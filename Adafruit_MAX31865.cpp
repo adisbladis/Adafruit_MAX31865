@@ -337,7 +337,20 @@ uint16_t Adafruit_MAX31865::readRTD(void) {
   return rtd;
 }
 
-//*********************************************
+/**************************************************************************/
+/*!
+    @brief Read the temperature in C from the RTDAsync through calculation of the
+    resistance. Uses
+   http://www.analog.com/media/en/technical-documentation/application-notes/AN709_0.pdf
+   technique
+    @param RT, The measured resistance obtained using the function readRTDAsync()
+    @param RTDnominal The 'nominal' resistance of the RTD sensor, usually 100
+    or 1000
+    @param refResistor The value of the matching reference resistor, usually
+    430 or 4300
+    @returns Temperature in C
+*/
+/**************************************************************************/
  float Adafruit_MAX31865::temperatureAsync(float Rt, float RTDnominal, float refResistor) {
   float Z1, Z2, Z3, Z4, temp;
 
@@ -374,65 +387,19 @@ uint16_t Adafruit_MAX31865::readRTD(void) {
 
   return temp;
 }
-//*/
+
  
-//**********************************************
-/* bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
-  enum t_state : byte {STATE1, STATE2, STATE3};
-  static t_state state = STATE1;
-  static uint32_t chrono = 0;
-  bool valueAvailable = false;
- 
-  switch (state) {
 
-    case STATE1:
-      clearFault();
-      //enableBias(true);
-      if (!bias) {
-        uint8_t t = readRegister8(MAX31865_CONFIG_REG);
-        t |= MAX31865_CONFIG_BIAS; // enable bias
-        writeRegister8(MAX31865_CONFIG_REG, t);
-      }
-      chrono = millis();
-      state = STATE2;
-      break;
 
-    case STATE2:
-      if (millis() - chrono >= 10) {
-        uint8_t t = readRegister8(MAX31865_CONFIG_REG);
-        t |= MAX31865_CONFIG_1SHOT;
-        writeRegister8(MAX31865_CONFIG_REG, t);
-        chrono = millis();
-        state = STATE3;
-      }
-      break;
 
-    case STATE3:
-      if(filter50Hz){
-        if (millis() - chrono >= 75) {
-          rtd = readRegister16(MAX31865_RTDMSB_REG);
-          rtd >>= 1;        // remove fault
-          state = STATE1;   // get ready for next time
-          valueAvailable = true; // signal computation is done
-        }
-      }
-      else{
-        if (millis() - chrono >= 65) {
-          rtd = readRegister16(MAX31865_RTDMSB_REG);
-          rtd >>= 1;        // remove fault
-          state = STATE1;   // get ready for next time
-          valueAvailable = true; // signal computation is done
-        }
-      }
-      break;
-  }
-  return valueAvailable;
-}
+/**************************************************************************/
+/*!
+    @brief Read the raw 16-bit value from the RTD_REG in one shot mode but asynchronously using a state machine, 
+           and update the variable  rtd : The raw unsigned 16-bit value, NOT temperature!
+    @return boolean value: false = conversion not finished, true = conversion finished, the RTD value has been measured
 */
-
+/**************************************************************************/
 bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
-  //enum t_state : byte {STATE1, STATE2, STATE3};
-  //static t_state state = STATE1; 
   bool valueAvailable = false;
   uint32_t timeoutVbias = 10;
   uint32_t timeoutf50Hz = 75;
@@ -486,9 +453,6 @@ bool Adafruit_MAX31865::readRTDAsync(uint16_t & rtd) {
 void Adafruit_MAX31865::setState(t_state new_state){
   this->state = new_state;
 }
-
-
-
 
 
 /**********************************************/
